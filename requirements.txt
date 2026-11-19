@@ -1,0 +1,10 @@
+torch>=2.1
+numpy>=1.24
+scipy>=1.10
+opencv-python>=4.8
+safetensors>=0.4
+huggingface_hub>=0.20
+# training/ only
+scikit-image>=0.21
+zarr>=2.16
+s3fs>=2023.6
