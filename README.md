@@ -92,14 +92,15 @@ Everything used to train the released model is in `training/`.
 - To fine-tune from our weights (on another scroll, other slicing axes…):
   `INIT_WEIGHTS=synthetic_slices_ema_6655.safetensors python training/entrainer.py`.
 
-The training code still has French names and log messages (it is the research code as it ran). PRs that translate it are welcome.
+The training code is the research code as it ran on our cloud GPU pod: it still has French names and log messages, and it has not
+yet been re-tested on other machines (loading the released weights for fine-tuning is tested). Issues and PRs are welcome.
 
 ## Honest limits
 
 - **Exact:** the layout. **Learned, so approximate:** the papyrus under each line, because the training layouts were m7 surface
   predictions, which do not sit exactly on the sheets.
   - A sheet detector trained on real slices finds our lines in generated slices about as well as it finds m7 lines in real ones:
-    F1 at 2 px, 0.36–0.43 vs 0.38.
+    F1 at 2 px, 0.36 on the published sample tiles vs 0.38 for m7 lines on real slices.
 - **Invented by the model:** fine strands between two lines, texture and debris.
 - **Not simulated yet:** hairpins (sheets folding back), spiral centres, cracks crossing many sheets, frayed sheet ends. This is
   the first item on the roadmap.

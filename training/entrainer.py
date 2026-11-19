@@ -137,15 +137,21 @@ def main():
     st = dict(pas=0, calcul_s=0.0, dernier_eval_s=-1000000000.0, n_eval=0)
     if os.path.exists(f'{PTS}/dernier.pt'):
         c = torch.load(f'{PTS}/dernier.pt', map_location=dev)
-    elif os.environ.get('INIT_WEIGHTS'):
-        _w = os.environ['INIT_WEIGHTS']
-        _sd = __import__('safetensors.torch', fromlist=['load_file']).load_file(_w) if _w.endswith('.safetensors') else torch.load(_w, map_location='cpu', weights_only=True)
-        net.load_state_dict(_sd); ema.load_state_dict(_sd); log(f'fine-tuning from {_w}')
         net.load_state_dict(c['net'])
         ema.load_state_dict(c['ema'])
         opt.load_state_dict(c['opt'])
         st = c['st']
         log(f"reprise au pas {st['pas']} ({st['calcul_s'] / 60:.1f} min de calcul)")
+    elif os.environ.get('INIT_WEIGHTS'):
+        _w = os.environ['INIT_WEIGHTS']
+        if _w.endswith('.safetensors'):
+            from safetensors.torch import load_file
+            _sd = load_file(_w, device='cpu')
+        else:
+            _sd = torch.load(_w, map_location='cpu', weights_only=True)
+        net.load_state_dict(_sd)
+        ema.load_state_dict(_sd)
+        log(f'fine-tuning from {_w}')
     else:
         log(f'réseau neuf : {sum((p.numel() for p in net.parameters())) / 1000000.0:.1f} M paramètres')
         journal(f"- {time.strftime('%d/%m %H:%M')} UTC : entraînement lancé — {n_tout} paires, {n_garde} gardées après tri qualité, entraînement {int(tr.sum())}, examen {len(sel)} ; réseau {sum((p.numel() for p in net.parameters())) / 1000000.0:.1f} M paramètres, lot {BATCH}, EDM (P_mean {PMEAN}, P_std {PSTD}), bf16.")
