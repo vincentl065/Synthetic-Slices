@@ -3,3 +3,6 @@ __pycache__/
 *.safetensors
 *.pt
 out/
+*_v01.bak
+*.egg-info/
+build/

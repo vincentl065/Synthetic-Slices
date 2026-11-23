@@ -24,8 +24,10 @@ def pick_dtype(device):
 
 @torch.no_grad()
 def sample(net, cond, style, H, W, gen, device="cuda", dtype=None, batch_windows=9, steps=32, churn=30.0,
-           smin=0.05, smax=50.0, snoise=1.003, sigma_max=80.0, sigma_min=0.002, rho=7.0):
-    """cond (B, 3, H, W), style (B,) long -> images in [-1, 1], (B, 1, H, W). H, W: multiples of 128, >= 256."""
+           smin=0.05, smax=50.0, snoise=1.003, sigma_max=80.0, sigma_min=0.002, rho=7.0, guidance=1.0):
+    """cond (B, 3, H, W), style (B,) long -> images in [-1, 1], (B, 1, H, W). H, W: multiples of 128, >= 256.
+    guidance: classifier-free guidance on the layout (1.0 = off, the v0.1 setting). v0.2 uses 1.6 for fold and hard-case layouts:
+    D = D_uncond + guidance * (D_cond - D_uncond), where D_uncond sees an all-zero condition (the model was trained with condition dropout)."""
     B = cond.shape[0]; pos = [(y, x) for y in range(0, H - T_WIN + 1, STRIDE) for x in range(0, W - T_WIN + 1, STRIDE)]
     h1 = torch.hann_window(T_WIN + 2, periodic=False, device=device, dtype=torch.float64)[1:-1]; hann = torch.outer(h1, h1) + 1e-3
     t = torch.arange(steps, device=device, dtype=torch.float64)
@@ -39,6 +41,10 @@ def sample(net, cond, style, H, W, gen, device="cuda", dtype=None, batch_windows
         xw = torch.stack([x[b, :, yy:yy + T_WIN, xx:xx + T_WIN] for b in range(B) for (yy, xx) in pos]).float()
         sv = torch.full((len(xw),), float(s), device=device); K = batch_windows
         d = torch.cat([denoise(net, xw[k:k + K], sv[k:k + K], cw[k:k + K], sw[k:k + K], aw[k:k + K], dtype) for k in range(0, len(xw), K)]).double()
+        if guidance != 1.0:
+            du = torch.cat([denoise(net, xw[k:k + K], sv[k:k + K], torch.zeros_like(cw[k:k + K]), sw[k:k + K], aw[k:k + K], dtype)
+                            for k in range(0, len(xw), K)]).double()
+            d = du + guidance * (d - du)
         acc = torch.zeros_like(x); w = torch.zeros_like(x); j = 0
         for b in range(B):
             for (yy, xx) in pos:

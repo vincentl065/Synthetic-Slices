@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "synthetic-slices"
+version = "0.2.0"
+description = "Synthetic Herculaneum scroll CT slices with exact per-sheet labels, and a sheet-line detector trained on them"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"          # code only; the weights and generated data are CC BY-NC 4.0 (see README)
+license-files = ["LICENSE"]
+authors = [{ name = "vincentl065" }]
+keywords = ["vesuvius-challenge", "herculaneum", "ct", "synthetic-data", "diffusion", "segmentation"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+dependencies = [
+    "torch>=2.1",
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "scikit-image>=0.21",
+    "opencv-python-headless>=4.8",
+    "safetensors>=0.4",
+    "huggingface_hub>=0.20",
+]
+
+[project.optional-dependencies]
+tif = ["tifffile>=2023.1"]
+training = ["zarr>=2.16", "s3fs>=2023.6"]
+
+[project.scripts]
+synthetic-slices = "synthetic_slices.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/vincentl065/Synthetic-Slices"
+Weights = "https://huggingface.co/vincentl065/Synthetic-Slices"
+
+[tool.setuptools]
+packages = ["synthetic_slices"]
