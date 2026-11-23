@@ -8,8 +8,8 @@ slicing axis. ~35 M parameters, 5 levels (64-128-192-256-256 channels), 2 residu
 Attribute names are kept identical to the training code so the released weights load as they are."""
 import math, torch, torch.nn as nn, torch.nn.functional as F
 
-# texture styles = public ~9 um scans of these scrolls (+ Paris 4 with exact instance labels); style index NS = "unknown"
-STYLES = ["PHerc0211", "PHerc1545", "PHerc1203", "PHerc0175A", "PHerc0358", "PHerc0813", "PHerc0826", "PHerc0191", "PHerc0306B", "Paris4"]
+# texture styles = public ~9 um scans of 9 Herculaneum scrolls (neutral names) + Paris 4 with exact instance labels; style index NS = "unknown"
+STYLES = ["style_0", "style_1", "style_2", "style_3", "style_4", "style_5", "style_6", "style_7", "style_8", "Paris4"]   # neutral names (same order and indices as v0.1)
 NS = len(STYLES)
 DMAX = 32.0
 SIGMA_DATA = 0.5

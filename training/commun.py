@@ -3,7 +3,7 @@ Outputs/inputs live under $GEN_RACINE (default /workspace/generateur): donnees/ 
 import os, json, math, time, numpy as np, torch, torch.nn as nn, torch.nn.functional as F, torch.utils.checkpoint
 RACINE = os.environ.get('GEN_RACINE', '/workspace/generateur')
 DONNEES = f'{RACINE}/donnees'
-ROULEAUX = {'PHerc0211': '20250821151803-9.362um-1.2m-113keV', 'PHerc1545': '20250821151648-9.362um-1.2m-113keV', 'PHerc1203': '20250820131727-9.362um-1.2m-113keV', 'PHerc0175A': '20250521115057-8.640um-1.2m-116keV', 'PHerc0358': '20250821151737-9.362um-1.2m-113keV', 'PHerc0813': '20250821151723-9.362um-1.2m-113keV', 'PHerc0826': '20250821151701-9.362um-1.2m-113keV', 'PHerc0191': '20250821151635-9.362um-1.2m-113keV', 'PHerc0306B': '20250521133212-8.640um-1.2m-116keV'}
+ROULEAUX = {'style_0': '20250821151803-9.362um-1.2m-113keV', 'style_1': '20250821151648-9.362um-1.2m-113keV', 'style_2': '20250820131727-9.362um-1.2m-113keV', 'style_3': '20250521115057-8.640um-1.2m-116keV', 'style_4': '20250821151737-9.362um-1.2m-113keV', 'style_5': '20250821151723-9.362um-1.2m-113keV', 'style_6': '20250821151701-9.362um-1.2m-113keV', 'style_7': '20250821151635-9.362um-1.2m-113keV', 'style_8': '20250521133212-8.640um-1.2m-116keV'}   # neutral names, same order as v0.1; values = public scan volume ids
 STYLES = list(ROULEAUX) + ['Paris4']
 NS = len(STYLES)
 DMAX = 32.0
