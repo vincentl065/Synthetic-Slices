@@ -10,6 +10,24 @@ instance segmentation.
 *v0.2 recipe, 256 px tiles at ~9.4 µm. Top: generated slices. Bottom: the exact sheet lines they were generated from, one colour per
 sheet. No real slice appears in this picture.*
 
+## Results at a glance
+
+Sheet-line detection on **Paris 4, a scroll no model saw** (F1 at 2 px, 3 training seeds, same small U-Net and same NMS 2 extraction
+for both learned detectors):
+
+| detector | F1 Paris 4 | F1 held-out hand-traced slices | branches / 1,000 px | sheet jumps / 1,000 px |
+|---|---|---|---|---|
+| **trained on synthetic tiles only** | **0.573 ± 0.003** | **0.603** | **0** | 14.1 |
+| trained on real slices (m7 labels) | 0.431 ± 0.006 | 0.529 | 0 | 13.9 |
+| classic ridge filter (no learning) | 0.706 | 0.572 | 0 | 14.1 |
+
+Synthetic data beats real m7-labelled data for the same detector; the classic ridge filter is still ahead on Paris 4. Full benchmark
+(before / after NMS 2, line ends, per-seed values) in [Benchmark](#benchmark-is-synthetic-training-data-useful) below.
+
+![Benchmark: F1, branches, sheet jumps and line ends, before and after NMS 2](assets/stats_v02.png)
+
+![Paris 4: CT, true lines, detector trained on synthetic tiles, same detector trained on real slices, same NMS 2](assets/paris4_synthetic_vs_real_nms2.png)
+
 ## What's new in v0.2
 
 - **Harder layouts:** hairpins, tight U folds and bends, accordion folds, cracks that cut and offset the sheets, crushed "mush",
