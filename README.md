@@ -10,6 +10,22 @@ instance segmentation.
 *v0.2 recipe, 256 px tiles at ~9.4 µm. Top: generated slices. Bottom: the exact sheet lines they were generated from, one colour per
 sheet. No real slice appears in this picture.*
 
+## New in v0.3: whole scroll slices
+
+![8 synthetic whole slices at 9 µm, each shown half as the generated CT slice and half with its exact trace](assets/whole_slices_v03_grid.jpg)
+
+*Every slice comes already traced: left of each cut, the generated CT slice; right, its exact trace, one continuous sheet from the centre to the edge.*
+
+- **A generator of whole scroll cross-sections**: one continuous sheet from the centre to the edge, 24 to 50 mm across, loose or
+  crushed, four damage levels, with the exact trace, winding number and phase for every pixel.
+- **A dataset of 500 slices** (19.8 GB) made with it:
+  [huggingface.co/datasets/vincentl065/synthetic-scroll-slices](https://huggingface.co/datasets/vincentl065/synthetic-scroll-slices).
+- **A first baseline tracer** trained on them, with its measured limits.
+
+Everything is in [`whole_slices/`](whole_slices/README.md).
+
+![One synthetic slice, half raw scan, half exact ground truth](assets/whole_slice_v03_ground_truth.jpg)
+
 ## Results at a glance
 
 Sheet-line detection on **Paris 4, a scroll no model saw** (F1 at 2 px, 3 training seeds, same small U-Net and same NMS 2 extraction

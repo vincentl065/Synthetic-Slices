@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.3.0
+
+### Added
+- **Whole scroll slices** (`whole_slices/generator/`): the shape of a complete cross-section is computed as a winding field
+  (loose or crushed scroll, soft folds, cracks, inclusions), the diffusion generator paints it window by window, and a finishing
+  step adds motion blur, the tone of a real scroll, inclusions and the edge.
+  - `lot.py` makes a batch on one or several GPUs and resumes where it stopped.
+  - Cracks are made by breaking the trace given to the painter; the ground truth stays continuous.
+  - Faster whole-slice sampler (`sampler_rapide.py`): windows outside the scroll are skipped, 192 px stride, checked against the
+    128 px reference.
+- **Dataset** `vincentl065/synthetic-scroll-slices` on Hugging Face: 500 slices with their ground truth, the painter weights
+  (`generator/`) and the baseline weights (`baseline/`).
+- **Baseline tracer** (`whole_slices/baseline_tracer/`): training, data preparation and inference code of a first model trained on
+  the dataset, and its scores on held-out synthetic slices and on Paris 4.
+
 ## v0.2.0
 
 ### Added
