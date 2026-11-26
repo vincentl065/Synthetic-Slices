@@ -77,7 +77,9 @@ python lot.py out 2000 500 0,1,2,3 8                   # 4 GPUs
 
 `baseline_tracer/` is a first attempt at the thing these slices are made for: a model that traces a whole real slice. It is a
 small U-Net (12 M parameters) that looks at 512 px crops and predicts the sheet lines, the phase between sheets, and the direction
-and density of the winding. Weights: `baseline/` in the dataset repository.
+and density of the winding. The trained weights are published:
+[`baseline/tracer_step60000.pt`](https://huggingface.co/datasets/vincentl065/synthetic-scroll-slices/blob/main/baseline/tracer_step60000.pt) (50 MB, the model
+measured below) and `baseline/tracer_step52500.pt` (same run, best step on Paris 4), in the dataset repository.
 
 ![Paris 4, whole slice: baseline trace next to the published trace](../assets/whole_slice_v03_paris4_baseline.jpg)
 
@@ -119,6 +121,17 @@ python preparer.py work &            # downloads the dataset slices and turns th
 python centres.py work &             # adds the winding centre of each slice
 TEMOINS=c1321,c1316,c1305,c1300 python entrainer.py work 60000 10
 ```
+
+To run the published model instead of training one:
+
+```bash
+cd whole_slices/baseline_tracer
+python -c "from huggingface_hub import hf_hub_download as d; import shutil; shutil.copy(d('vincentl065/synthetic-scroll-slices','baseline/tracer_step60000.pt',repo_type='dataset'),'tracer_step60000.pt')"
+python inferer.py work tracer_step60000.pt out c1003     # any slice already prepared in work/prep by preparer.py + centres.py
+```
+
+`out/c1003_brut.npz` holds the raw answer at half resolution: `sin` and `cos` of the phase between sheets (x100), the slope of the winding number `gx`, `gy`,
+the sheet density `dens`, the line map `ligne` and the winding centre. The traced lines are where `sin` changes sign with `cos` > 0.2.
 
 (`TEMOINS` = held-out slices. A Paris 4 witness slice is expected in `work/temoins/` if you want the real-data check; the code runs
 without it.)
