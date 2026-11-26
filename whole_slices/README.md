@@ -31,7 +31,7 @@ Each slice `cNNNN` is two files:
 | `cassure` | where the image is broken (cracks, torn sheets, holes): the trace still runs through, but there is nothing to see (bit-packed) |
 | `vis` | the trace actually given to the painter, i.e. broken where the image is broken (bit-packed) |
 | `plages` | map of the areas painted as crushed "mush" |
-| `meta` | JSON: size, family (`lache` = loose, `ecrase` = crushed), damage level 0 to 3, diameter, all shape parameters |
+| `meta` | JSON: size and all shape parameters; `meta["lot"]["tirage"]` holds `FAM` (`lache` = loose, `ecrase` = crushed), `DEG` (damage level 0 to 3) and `DMM` (diameter in mm) |
 
 The mix: 40 % loose scrolls, 60 % crushed; damage level 0 (intact) 25 %, 1: 30 %, 2: 30 %, 3 (badly damaged) 15 %; diameters drawn
 between 24 and 50 mm, most around 38 mm. The slice number seeds everything, so any slice can be regenerated.
@@ -47,7 +47,7 @@ lines = np.unpackbits(z["lig"], axis=-1)[:, :W] > 0          # exact sheet lines
 inside = np.unpackbits(z["ded"], axis=-1)[:, :W] > 0
 phase = z["ph8"]                                             # 0..255 between two sheets
 turn = cv2.resize(z["U2"], (W, H))                           # winding number
-meta = json.loads(str(z["meta"]))
+meta = json.loads(str(z["meta"]))                         # meta["lot"]["tirage"]: FAM, DEG, DMM
 ```
 
 ## Make your own slices
@@ -57,7 +57,7 @@ meta = json.loads(str(z["meta"]))
 
 ```bash
 cd whole_slices/generator
-bash installer.sh                                      # numpy, scipy, opencv, scikit-image (torch with CUDA must be there)
+bash installer.sh                                      # numpy, scipy, opencv, scikit-image, huggingface_hub (torch with CUDA must be there)
 # painter weights (146 MB), from the dataset repository:
 python -c "from huggingface_hub import hf_hub_download as d; import shutil; shutil.copy(d('vincentl065/synthetic-scroll-slices','generator/ema_affine_p02000.pt',repo_type='dataset'),'ema_affine_p02000.pt')"
 python lot.py out 2000 100 0 2 24 50                   # 100 slices numbered 2000..2099 on GPU 0, 2 shapes in parallel, 24-50 mm
