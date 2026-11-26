@@ -13,7 +13,7 @@ generator, so the labels are exact by construction.
 ## The dataset: 500 slices, ready to use
 
 [huggingface.co/datasets/vincentl065/synthetic-scroll-slices](https://huggingface.co/datasets/vincentl065/synthetic-scroll-slices)
-(19.8 GB, CC BY-NC 4.0).
+(19.8 GB, CC BY-NC 4.0). The dataset is public: no account or token is needed to download it, and single slices can be fetched one by one.
 
 Each slice `cNNNN` is two files:
 
